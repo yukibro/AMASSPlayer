@@ -1,0 +1,50 @@
+﻿//not using this file
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
+using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
+using System.Text;
+using System.Threading.Tasks;
+using UnityEngine;
+using Numpy;
+
+public class AMASSData
+{
+    public string filename{ get; protected set; }
+    float[,] trans;//: (2751, 3)
+    string gender;// male
+    double mocap_framerate;//: 120.0
+    double[] betas;//: (16,)
+    float[,] dmpls;//: (2751, 8) # controls soft tissue dynamics
+    Quaternion[,] poseQ;//: (2751, 156) => 2751, 52
+    
+    public AMASSPose this[int i]
+    {
+        get { 
+            return new AMASSPose() {
+                root_orientation = new Vector3(trans[i,0], trans[i,1], trans[i,2]),
+                root_rotation = poseQ[i,0],
+                pose_body = poseQ.Cast<Quaternion>().Skip(1).Take(51).ToArray()
+            }; 
+        }
+    }
+    
+    public class AMASSPose
+    {
+        public Vector3 root_orientation;
+        public Quaternion root_rotation;
+        public Quaternion[] pose_body;
+    }
+    public AMASSData(string fileName)
+    {
+        //System.IO.Directory.Delete("../Temp/", true);
+        //System.IO.Directory.CreateDirectory("../Temp/");
+        
+        //var loadednpz = np.load(filename);
+
+    }
+    
+}
